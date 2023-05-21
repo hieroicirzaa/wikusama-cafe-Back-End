@@ -7,7 +7,7 @@ const fs = require('fs')
 const joi = require(`joi`)
 const upload = require(`./upload_gambar`).single('gambar')
 
-const validateMenu = async (input) => {
+const validateMenu = (input) => {
   let rules = joi.object().keys({
     nama_menu: joi
       .string()

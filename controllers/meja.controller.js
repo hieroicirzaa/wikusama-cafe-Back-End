@@ -3,7 +3,7 @@ const mejaModel = require(`../models/index`).meja
 const Op = require(`sequelize`).Op
 const joi = require(`joi`)
 
-const validateMeja = async (input) => {
+const validateMeja = (input) => {
   let rules = joi.object().keys({
     nomor_meja: joi
       .string()
