@@ -18,8 +18,8 @@ exports.addTransaksi = async (request, response) => {
     const kondisiStatus = request.body.status;
     //untuk mengecek meja
     const meja = await mejaModel.findOne({ where: { id: idMeja } });
-    //
-    if (meja.status ===     "terisi" && kondisiStatus === "belum_bayar") {
+
+    if (meja.status === "terisi" && kondisiStatus === "belum_bayar") {
       return response.json({
         success: false,
         message: "Meja sedang terisi. Tidak dapat membuat transaksi."
@@ -62,7 +62,7 @@ exports.addTransaksi = async (request, response) => {
     return response.json({
       success: true,
       data: result,
-      message: `New Menu Transaksi has been inserted`
+      message: `data Transaksi berhasil ditambahkan`
     });
   } catch (error) {
     return response.json({
@@ -72,8 +72,6 @@ exports.addTransaksi = async (request, response) => {
   }
 };
 
-
-/** create function for update  Transaksi */
 exports.updateTransaksi = async (request, response) => {
   try {
     let id_transaksi = request.params.id_transaksi
@@ -137,10 +135,10 @@ exports.updateStatusTransaksi = async (request, response) => {
 
     //id meja
     const id_Meja = await transaksiModel.findOne({ where: { id: id_transaksi } });
-    
-    await mejaModel.update({ status: "kosong" }, { where: { id: id_Meja.id_meja } });   
 
-    await transaksiModel.update({status: "lunas"}, { where: { id: id_transaksi } });
+    await mejaModel.update({ status: "kosong" }, { where: { id: id_Meja.id_meja } });
+
+    await transaksiModel.update({ status: "lunas" }, { where: { id: id_transaksi } });
 
     return response.json({
       status: true,
@@ -162,7 +160,7 @@ exports.deleteTransaksi = async (request, response) => {
 
     return response.json({
       success: true,
-      message: "transaksi Menu's has been deleted"
+      message: "transaksi Menu berhasil dihapus"
     });
   } catch (error) {
     return response.json({
@@ -172,7 +170,6 @@ exports.deleteTransaksi = async (request, response) => {
   }
 };
 
-/** create function for get all transaksiing data */
 exports.getTransaksi = async (request, response) => {
   try {
     let result = await transaksiModel.findAll({
@@ -196,7 +193,7 @@ exports.getTransaksi = async (request, response) => {
   }
 }
 
-/** create function for get filter transaksi data id admin and id member */
+
 exports.filterTransaksi = async (request, response) => {
   try {
     const keyword = request.body.keyword;
@@ -272,7 +269,7 @@ exports.jumlahPendapatan = async (request, response) => {
     return response.json({
       success: true,
       data: result,
-      message: 'Income calculated successfully.'
+      message: 'pendapatan berhasil dijumlah'
     });
   } catch (error) {
     return response.json({

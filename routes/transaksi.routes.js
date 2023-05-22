@@ -3,13 +3,14 @@ const app = express()
 app.use(express.json())
 
 const transaksiController = require(`../controllers/transaksi.controller`)
+const authController = require(`../controllers/auth.controller`)
 
-app.get("/getTransaksi", transaksiController.getTransaksi)
-app.post("/addTransaksi", transaksiController.addTransaksi) 
-app.put("/:id_transaksi", transaksiController.updateTransaksi)
-app.put("/updateStatus/:id_transaksi", transaksiController.updateStatusTransaksi) 
-app.delete("/:id_transaksi", transaksiController.deleteTransaksi)
-app.post("/jumlahPendapatan", transaksiController.jumlahPendapatan) 
-app.post("/filterTransaksi", transaksiController.filterTransaksi) 
+app.get("/getTransaksi", authController.authorization, transaksiController.getTransaksi)
+app.post("/addTransaksi", authController.authorization, transaksiController.addTransaksi)
+app.put("/:id_transaksi", authController.authorization, transaksiController.updateTransaksi)
+app.put("/updateStatus/:id_transaksi", authController.authorization, transaksiController.updateStatusTransaksi)
+app.delete("/:id_transaksi", authController.authorization, transaksiController.deleteTransaksi)
+app.post("/jumlahPendapatan", authController.authorization, transaksiController.jumlahPendapatan)
+app.post("/filterTransaksi", authController.authorization, transaksiController.filterTransaksi)
 
 module.exports = app

@@ -24,6 +24,8 @@ app.use(`/meja`, mejaRoute)
 const transaksiRoute = require(`./routes/transaksi.routes`)
 app.use(`/transaksi`, transaksiRoute)
 
+const authRoute = require(`./routes/auth.routes`)
+app.use(`/auth`,authRoute)
 
 app.listen(PORT, () => {
   console.log(`Server of cafe runs on port

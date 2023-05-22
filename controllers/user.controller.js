@@ -164,5 +164,4 @@ exports.deleteUser = async (request, response) => {
       message: error.message
     })
   }
-
 }

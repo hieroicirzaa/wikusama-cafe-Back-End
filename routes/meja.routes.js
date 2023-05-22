@@ -4,10 +4,12 @@ const app = express()
 app.use(express.json())
 
 const mejaController = require(`../controllers/meja.controller`)
-app.get("/getAllMeja", mejaController.getAllMeja)
-app.post("/addMeja", mejaController.addMeja)
-app.post("/find", mejaController.findMeja)
-app.put("/:id", mejaController.updateMeja)
-app.delete("/:id", mejaController.deleteMeja)
+const authController = require(`../controllers/auth.controller`)
+
+app.get("/getAllMeja", authController.authorization, mejaController.getAllMeja)
+app.post("/addMeja", authController.authorization, mejaController.addMeja)
+app.post("/find", authController.authorization, mejaController.findMeja)
+app.put("/:id", authController.authorization, mejaController.updateMeja)
+app.delete("/:id", authController.authorization, mejaController.deleteMeja)
 
 module.exports = app

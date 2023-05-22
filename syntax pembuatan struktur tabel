@@ -1,0 +1,9 @@
+npx sequelize-cli model:create --name meja --attributes nomor_meja:string,status:enum:'{kosong,terisi}'
+
+npx sequelize-cli model:create --name menu --attributes nama_menu:string,jenis:enum:'{makanan,minuman}',deskripsi:string,gambar:string,harga:integer
+
+npx sequelize-cli model:create --name user --attributes nama_user:string,role:enum:'{admin,kasir,manajer}',username:string,password:string
+
+npx sequelize-cli model:create --name transaksi --attributes tgl_transaksi:date,id_user:integer,id_meja:integer,nama_pelanggan:string,status:enum:'{belum_bayar,lunas}'
+
+npx sequelize-cli model:create --name detail_transaksi --attributes id_transaksi:integer,id_menu:integer,harga:integer,qty:integer,total_harga:integer
