@@ -21,6 +21,7 @@ exports.authentication = async (request, response) => {
             return response.json({
                 status: true,
                 token: token,
+                data:result,
                 message: `login successfull`
             })
         } else {
