@@ -165,3 +165,26 @@ exports.deleteUser = async (request, response) => {
     })
   }
 }
+// role 
+exports.roleUser = async (request, response) => {
+  try {
+    const param = { role: request.params.role };
+    const user = await userModel.findAll({ where: param });
+    if (user.length > 0) { // jika data ditemukan
+      return response.json({ // mengembalikan response dengan status code 200 dan data meja
+        status: "success",
+        data: user,
+      });
+    } else { // jika data tidak ditemukan
+      return response.status(404).json({ // mengembalikan response dengan status code 404 dan pesan data tidak ditemukan
+        status: "error",
+        message: "data tidak ditemukan",
+      });
+    }
+  } catch (error) { // jika gagal
+    return response.status(400).json({ // mengembalikan response dengan status code 400 dan pesan error
+      status: "error",
+      message: error.message,
+    });
+  }
+};

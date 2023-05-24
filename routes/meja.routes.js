@@ -11,5 +11,5 @@ app.post("/addMeja", authController.authorization, mejaController.addMeja)
 app.post("/find", authController.authorization, mejaController.findMeja)
 app.put("/:id", authController.authorization, mejaController.updateMeja)
 app.delete("/:id", authController.authorization, mejaController.deleteMeja)
-
+app.get(`/status/:status`,authController.authorization, mejaController.statusMeja)
 module.exports = app

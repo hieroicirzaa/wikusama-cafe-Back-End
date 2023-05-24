@@ -638,6 +638,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Status kosong Meja",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},

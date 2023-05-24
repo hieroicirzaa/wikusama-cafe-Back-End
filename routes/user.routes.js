@@ -11,5 +11,5 @@ app.post("/addUser", authController.authorization, userController.addUser)
 app.post("/find", authController.authorization, userController.findUser)
 app.put("/:id", authController.authorization, userController.updateUser)
 app.delete("/:id", authController.authorization, userController.deleteUser)
-
+app.get(`/user/:role`,authController.authorization, userController.roleUser)
 module.exports = app

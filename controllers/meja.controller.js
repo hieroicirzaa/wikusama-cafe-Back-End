@@ -145,3 +145,25 @@ exports.deleteMeja = async (request, response) => {
     })
   }
 }
+exports.statusMeja = async (request, response) => {
+  try {
+    const param = { status: request.params.status };
+    const meja = await mejaModel.findAll({ where: param });
+    if (meja.length > 0) { // jika data ditemukan
+      return response.json({ // mengembalikan response dengan status code 200 dan data meja
+        status: "success",
+        data: meja,
+      });
+    } else { // jika data tidak ditemukan
+      return response.status(404).json({ // mengembalikan response dengan status code 404 dan pesan data tidak ditemukan
+        status: "error",
+        message: "data tidak ditemukan",
+      });
+    }
+  } catch (error) { // jika gagal
+    return response.status(400).json({ // mengembalikan response dengan status code 400 dan pesan error
+      status: "error",
+      message: error.message,
+    });
+  }
+};
