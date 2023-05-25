@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname))
 // app.use(`/auth`, auth)
-
+// by M. Irza Dwi Pahlevi
 
 const userRoute = require(`./routes/user.routes`)
 app.use(`/user`, userRoute)
