@@ -201,29 +201,44 @@ exports.filterTransaksi = async (request, response) => {
     const data = await transaksiModel.findAll({
       where: {
         [Op.or]: [
-          { tgl_transaksi: { [Op.substring]: keyword } },
-          { id_user: { [Op.substring]: keyword } },
-          { id_meja: { [Op.substring]: keyword } },
+          { nama_pelanggan: { [Op.substring]: keyword } },
           { status: { [Op.substring]: keyword } },
-          { nama_pelanggan: { [Op.substring]: keyword } }
-        ]
+          // Pencarian berdasarkan "nama_user" di tabel "user"
+          { '$user.nama_user$': { [Op.substring]: keyword } },
+          // Pencarian berdasarkan "nama_menu" di tabel "menu" pada tabel "detail_transaksi"
+          { '$detail_transaksi.menu.nama_menu$': { [Op.substring]: keyword } },
+          // Pencarian berdasarkan "nomor_meja" di tabel "meja"
+          { '$meja.nomor_meja$': { [Op.substring]: keyword } },
+          // Pencarian berdasarkan "harga" di tabel "detail_transaksi"
+          { '$detail_transaksi.total_harga$': { [Op.substring]: keyword } },
+        ],
       },
       include: [
-        { model: mejaModel, as: "meja" },
-        { model: detailTransaksiModel, as: "detail_transaksi", include: [{ model: menuModel, as: "menu" }] },
-        { model: userModel, as: "user" }
-      ]
+        {
+          model: mejaModel,
+          as: "meja",
+        },
+        {
+          model: detailTransaksiModel,
+          as: "detail_transaksi",
+          include: [{ model: menuModel, as: "menu" }],
+        },
+        {
+          model: userModel,
+          as: "user",
+        },
+      ],
     });
 
     return response.json({
       success: true,
       data: data,
-      message: "All transaksi have been loaded"
+      message: "Data transaksi berhasil ditemukan berdasarkan pencarian",
     });
   } catch (error) {
     return response.json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

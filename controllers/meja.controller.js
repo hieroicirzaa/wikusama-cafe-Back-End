@@ -82,19 +82,19 @@ exports.addMeja = async (request, response) => {
       })
     }
     await mejaModel.create(request.body)
-    .then(result => {
-      return response.json({
-        success: true,
-        data: result,
-        message: `data meja berhasil ditambahkan`
+      .then(result => {
+        return response.json({
+          success: true,
+          data: result,
+          message: `data meja berhasil ditambahkan`
+        })
       })
-    })
-    .catch(error => {
-      return response.json({
-        success: false,
-        message: error.message
+      .catch(error => {
+        return response.json({
+          success: false,
+          message: error.message
+        })
       })
-    })
   } catch (error) {
     return response.json({
       status: false,
@@ -137,7 +137,7 @@ exports.deleteMeja = async (request, response) => {
     return response.json({
       status: true,
       message: `Data meja berhasil dihapus`
-  })
+    })
   } catch (error) {
     return response.json({
       status: false,
