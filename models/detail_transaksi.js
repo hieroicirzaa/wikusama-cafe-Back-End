@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class detail_transaksi extends Model {
-    
+
     static associate(models) {
       this.belongsTo(models.menu, {
         foreignKey: `id_menu`, as: `menu`

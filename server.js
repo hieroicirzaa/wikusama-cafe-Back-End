@@ -1,15 +1,16 @@
 const express = require(`express`)
 const app = express()
-const PORT = 8000
+const PORT = 4000
 const bodyParser = require('body-parser')
 const cors = require(`cors`)
-// const auth = require(`./routes/auth.routes`)
+const morgan = require('morgan')
+//const auth = require(`./routes/auth.routes`)
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname))
-// app.use(`/auth`, auth)
+app.use(morgan("combined"))
 // by M. Irza Dwi Pahlevi
 
 const userRoute = require(`./routes/user.routes`)
@@ -25,7 +26,7 @@ const transaksiRoute = require(`./routes/transaksi.routes`)
 app.use(`/transaksi`, transaksiRoute)
 
 const authRoute = require(`./routes/auth.routes`)
-app.use(`/auth`,authRoute)
+app.use(`/auth`, authRoute)
 
 app.listen(PORT, () => {
   console.log(`Server of cafe runs on port

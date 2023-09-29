@@ -12,13 +12,13 @@ const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
 
-        const acceptedType = [`image/jpg`, `image/jpeg`, `image/png`]
+        const acceptedType = [`image/jpg`, `image/jpeg`, `image/png`,`image/jfif`]
         if (!acceptedType.includes(file.mimetype)) {
             cb(null, false)
             return cb(`Invalid file type (${file.mimetype})`)
         }
         const fileSize = req.headers[`content-length`]
-        const maxSize = (2 * 1024 * 1024)
+        const maxSize = (5 * 1024 * 1024)
         if (fileSize > maxSize) {
             cb(null, false)
             return cb(`File size is too large`)

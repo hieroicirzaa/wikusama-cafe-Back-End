@@ -127,54 +127,56 @@ exports.addMenu = async (request, response) => {
 
 exports.updateMenu = async (request, response) => {
   try {
-    upload(request, response, async error => {
+    upload(request, response, async (error) => {
       if (error) {
-        return response.json({ message: error })
+        return response.json({ message: error });
       }
-      let id = request.params.id
+      let id = request.params.id;
 
-      let resultValidation = validateMenu(request.body)
+      let resultValidation = validateMenu(request.body);
       if (resultValidation.status === false) {
         return response.json({
           status: false,
-          message: resultValidation.message
-        })
+          message: resultValidation.message,
+        });
       }
 
       if (request.file) {
+        // Hanya jika ada gambar yang diunggah baru, Anda perlu mengelola gambar
         const selectedMenu = await menuModel.findOne({
-          where: { id: id }
-        })
-        const oldGambarMenu = selectedMenu.gambar
-        const pathGambar = path.join(__dirname, '../gambar', oldGambarMenu)
+          where: { id: id },
+        });
+        const oldGambarMenu = selectedMenu.gambar;
+        const pathGambar = path.join(__dirname, '../gambar', oldGambarMenu);
         if (fs.existsSync(pathGambar)) {
-          fs.unlink(pathGambar, error =>
-            console.log(error))
+          fs.unlink(pathGambar, (error) => console.log(error));
         }
-        request.body.gambar = request.file.filename
+        request.body.gambar = request.file.filename;
       }
-      await menuModel.update(request.body, { where: { id: id } })
-        .then(result => {
+
+      await menuModel
+        .update(request.body, { where: { id: id } })
+        .then((result) => {
           return response.json({
             success: true,
             data: request.body,
-            message: `Data menu berhasil terupdate`
-          })
+            message: `Data menu berhasil terupdate`,
+          });
         })
-        .catch(error => {
+        .catch((error) => {
           return response.json({
             success: false,
-            message: error.message
-          })
-        })
-    })
+            message: error.message,
+          });
+        });
+    });
   } catch (error) {
     return response.json({
       status: false,
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 
 exports.deleteMenu = async (request, response) => {
   try {

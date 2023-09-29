@@ -25,5 +25,8 @@
     "nodemon": "^2.0.22",
     "path": "^0.12.7",
     "sequelize": "^6.30.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0"
   }
 }
