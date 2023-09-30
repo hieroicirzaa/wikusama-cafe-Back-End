@@ -295,7 +295,7 @@ exports.jumlahPendapatan = async (request, response) => {
 };
 
 //Endpoint untuk Menghitung Total Pendapatan untuk Semua Transaksi pada Tanggal Tertentu:
-exports.totalPendapatanByDate = async (request, response) => {
+exports.totalPendapatanTanggal = async (request, response) => {
   try {
     const { date } = request.body;
 
@@ -340,10 +340,12 @@ exports.totalPendapatanBulanan = async (request, response) => {
         [fn('SUM', col('detail_transaksi.harga')), 'total_income']
       ],
       where: {
-        [Op.and]: [
-          literal(`MONTH(tgl_transaksi) = ${month}`),
-          literal(`YEAR(tgl_transaksi) = ${year}`)
-        ]
+        tgl_transaksi: {
+          [Op.and]: [
+            { [Op.gte]: `${year}-${month}-01 00:00:00` },
+            { [Op.lte]: `${year}-${month}-31 23:59:59` }
+          ]
+        }
       },
       include: [
         {
@@ -392,7 +394,7 @@ exports.totalPendapatanTahunan = async (request, response) => {
 
     return response.json({
       success: true,
-      data: totalPendapatan[0],
+      data: totalPendapatan,
       message: 'Total pendapatan tahunan berhasil dihitung'
     });
   } catch (error) {

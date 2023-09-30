@@ -13,7 +13,7 @@ app.delete("/:id_transaksi", authController.authorization, transaksiController.d
 app.post("/jumlahPendapatan", authController.authorization, transaksiController.jumlahPendapatan)
 app.post("/filterTransaksi", authController.authorization, transaksiController.filterTransaksi)
 
-app.post("/jumlahPendapatanHarian", authController.authorization, transaksiController.totalPendapatanByDate)
+app.post("/jumlahPendapatanTanggal", authController.authorization, transaksiController.totalPendapatanTanggal)
 app.post("/jumlahPendapatanBulanan", authController.authorization, transaksiController.totalPendapatanBulanan)
 app.post("/jumlahPendapatanTahunan", authController.authorization, transaksiController.totalPendapatanTahunan)
 
