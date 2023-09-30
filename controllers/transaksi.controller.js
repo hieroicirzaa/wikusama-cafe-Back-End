@@ -243,7 +243,7 @@ exports.filterTransaksi = async (request, response) => {
   }
 };
 
-//pemdapatam berdasarkan tanggal, bulanan dan tahunan
+//pemdapatan berdasarkan tanggal, bulanan dan tahunan jadi 1 (tidak terpakai)
 exports.jumlahPendapatan = async (request, response) => {
   try {
     const { date, month, year } = request.body;
@@ -285,6 +285,115 @@ exports.jumlahPendapatan = async (request, response) => {
       success: true,
       data: result,
       message: 'pendapatan berhasil dijumlah'
+    });
+  } catch (error) {
+    return response.json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+//Endpoint untuk Menghitung Total Pendapatan untuk Semua Transaksi pada Tanggal Tertentu:
+exports.totalPendapatanByDate = async (request, response) => {
+  try {
+    const { date } = request.body;
+
+    const totalPendapatan = await transaksiModel.findAll({
+      attributes: [
+        [fn('SUM', col('detail_transaksi.harga')), 'total_income']
+      ],
+      where: {
+        tgl_transaksi: {
+          [Op.between]: [`${date} 00:00:00`, `${date} 23:59:59`]
+        }
+      },
+      include: [
+        {
+          model: detailTransaksiModel,
+          as: 'detail_transaksi',
+          attributes: []
+        }
+      ]
+    });
+
+    return response.json({
+      success: true,
+      data: totalPendapatan,
+      message: 'Total pendapatan berhasil dihitung berdasarkan tanggal'
+    });
+  } catch (error) {
+    return response.json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+//endpoint yang menghitung total pendapatan bulanan berdasarkan bulan dan tahun yang diinputkan
+exports.totalPendapatanBulanan = async (request, response) => {
+  try {
+    const { month, year } = request.body;
+
+    const totalPendapatan = await transaksiModel.findAll({
+      attributes: [
+        [fn('SUM', col('detail_transaksi.harga')), 'total_income']
+      ],
+      where: {
+        [Op.and]: [
+          literal(`MONTH(tgl_transaksi) = ${month}`),
+          literal(`YEAR(tgl_transaksi) = ${year}`)
+        ]
+      },
+      include: [
+        {
+          model: detailTransaksiModel,
+          as: 'detail_transaksi',
+          attributes: []
+        }
+      ]
+    });
+
+    return response.json({
+      success: true,
+      data: totalPendapatan,
+      message: 'Total pendapatan bulanan berhasil dihitung'
+    });
+  } catch (error) {
+    return response.json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+//endpoint yang menghitung total pendapatan tahunan berdasarkan tahun yang diinputkan:
+exports.totalPendapatanTahunan = async (request, response) => {
+  try {
+    const { year } = request.body;
+
+    const totalPendapatan = await transaksiModel.findAll({
+      attributes: [
+        [fn('SUM', col('detail_transaksi.harga')), 'total_income']
+      ],
+      where: {
+        tgl_transaksi: {
+          [Op.between]: [`${year}-01-01 00:00:00`, `${year}-12-31 23:59:59`]
+        }
+      },
+      include: [
+        {
+          model: detailTransaksiModel,
+          as: 'detail_transaksi',
+          attributes: []
+        }
+      ]
+    });
+
+    return response.json({
+      success: true,
+      data: totalPendapatan[0],
+      message: 'Total pendapatan tahunan berhasil dihitung'
     });
   } catch (error) {
     return response.json({
