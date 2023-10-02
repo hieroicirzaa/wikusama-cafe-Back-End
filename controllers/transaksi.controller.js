@@ -1,5 +1,5 @@
 const { transaksi: transaksiModel, detail_transaksi: detailTransaksiModel, menu: menuModel, meja: mejaModel, user: userModel } = require("../models/index");
-const { Op, fn, col, literal } = require("sequelize"); // import operator sequelize
+const { Op, fn, col, Sequelize } = require("sequelize"); // import operator sequelize
 
 exports.addTransaksi = async (request, response) => {
   try {
@@ -202,6 +202,7 @@ exports.filterTransaksi = async (request, response) => {
       where: {
         [Op.or]: [
           { nama_pelanggan: { [Op.substring]: keyword } },
+          { tgl_transaksi: { [Op.substring]: keyword } },
           { status: { [Op.substring]: keyword } },
           // Pencarian berdasarkan "nama_user" di tabel "user"
           { '$user.nama_user$': { [Op.substring]: keyword } },
@@ -243,56 +244,6 @@ exports.filterTransaksi = async (request, response) => {
   }
 };
 
-//pemdapatan berdasarkan tanggal, bulanan dan tahunan jadi 1 (tidak terpakai)
-exports.jumlahPendapatan = async (request, response) => {
-  try {
-    const { date, month, year } = request.body;
-
-    let whereCondition = {};
-    let groupBy = [];
-
-    if (date) {
-      whereCondition = {
-        tgl_transaksi: {
-          [Op.between]: [`${date} 00:00:00`, `${date} 23:59:59`]
-        }
-      };
-      groupBy = ['tgl_transaksi'];
-    } else if (month) {
-      whereCondition = literal(`MONTH(tgl_transaksi) = ${month}`);
-      groupBy = [literal('YEAR(tgl_transaksi)'), literal('MONTH(tgl_transaksi)')];
-    } else if (year) {
-      whereCondition = literal(`YEAR(tgl_transaksi) = ${year}`);
-      groupBy = [literal('YEAR(tgl_transaksi)')];
-    }
-
-    const result = await transaksiModel.findAll({
-      attributes: [
-        [fn('SUM', col('detail_transaksi.harga')), 'total_income']
-      ],
-      where: whereCondition,
-      include: [
-        {
-          model: detailTransaksiModel,
-          as: 'detail_transaksi',
-          attributes: []
-        }
-      ],
-      group: groupBy
-    });
-
-    return response.json({
-      success: true,
-      data: result,
-      message: 'pendapatan berhasil dijumlah'
-    });
-  } catch (error) {
-    return response.json({
-      success: false,
-      message: error.message
-    });
-  }
-};
 
 //Endpoint untuk Menghitung Total Pendapatan untuk Semua Transaksi pada Tanggal Tertentu:
 exports.totalPendapatanTanggal = async (request, response) => {
@@ -396,6 +347,70 @@ exports.totalPendapatanTahunan = async (request, response) => {
       success: true,
       data: totalPendapatan,
       message: 'Total pendapatan tahunan berhasil dihitung'
+    });
+  } catch (error) {
+    return response.json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// Endpoint untuk mendapatkan data statistik makanan dan minuman terlaris
+exports.statistik_makanan_minuman_terlaris = async (request, response) => {
+  try {
+    const statistik = await detailTransaksiModel.findAll({
+      attributes: [
+        [Sequelize.literal('menu.nama_menu'), 'nama_menu'],
+        [Sequelize.fn('SUM', Sequelize.col('qty')), 'total_pesanan']
+      ],
+      include: [
+        {
+          model: menuModel,
+          as: 'menu',
+          attributes: []
+        }
+      ],
+      group: ['menu.nama_menu'],
+      order: [[Sequelize.fn('SUM', Sequelize.col('qty')), 'DESC']]
+    });
+
+    return response.json({
+      success: true,
+      data: statistik,
+      message: 'Berhasil mengambil data statistik'
+    });
+  } catch (error) {
+    return response.json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// Endpoint untuk mendapatkan data statistik makanan dan minuman jarang dipesan
+exports.statistik_makanan_minuman_sedikit = async (request, response) => {
+  try {
+    const statistik = await detailTransaksiModel.findAll({
+      attributes: [
+        [Sequelize.literal('menu.nama_menu'), 'nama_menu'],
+        [Sequelize.fn('SUM', Sequelize.col('qty')), 'total_pesanan']
+      ],
+      include: [
+        {
+          model: menuModel,
+          as: 'menu',
+          attributes: []
+        }
+      ],
+      group: ['menu.nama_menu'],
+      order: [[Sequelize.fn('SUM', Sequelize.col('qty')), 'ASC']]
+    });
+
+    return response.json({
+      success: true,
+      data: statistik,
+      message: 'Berhasil mengambil data statistik'
     });
   } catch (error) {
     return response.json({
