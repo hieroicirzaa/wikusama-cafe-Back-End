@@ -244,11 +244,10 @@ exports.filterTransaksi = async (request, response) => {
   }
 };
 
-
 //Endpoint untuk Menghitung Total Pendapatan untuk Semua Transaksi pada Tanggal Tertentu:
 exports.totalPendapatanTanggal = async (request, response) => {
   try {
-    const { date } = request.body;
+    const { startDate, endDate } = request.body;
 
     const totalPendapatan = await transaksiModel.findAll({
       attributes: [
@@ -256,7 +255,7 @@ exports.totalPendapatanTanggal = async (request, response) => {
       ],
       where: {
         tgl_transaksi: {
-          [Op.between]: [`${date} 00:00:00`, `${date} 23:59:59`]
+          [Op.between]: [`${startDate} 00:00:00`, `${endDate} 23:59:59`]
         }
       },
       include: [
@@ -284,7 +283,7 @@ exports.totalPendapatanTanggal = async (request, response) => {
 //endpoint yang menghitung total pendapatan bulanan berdasarkan bulan dan tahun yang diinputkan
 exports.totalPendapatanBulanan = async (request, response) => {
   try {
-    const { month, year } = request.body;
+    const { startMonth, endMonth, startYear, endYear } = request.body;
 
     const totalPendapatan = await transaksiModel.findAll({
       attributes: [
@@ -293,8 +292,8 @@ exports.totalPendapatanBulanan = async (request, response) => {
       where: {
         tgl_transaksi: {
           [Op.and]: [
-            { [Op.gte]: `${year}-${month}-01 00:00:00` },
-            { [Op.lte]: `${year}-${month}-31 23:59:59` }
+            { [Op.gte]: `${startYear}-${startMonth}-01 00:00:00` },
+            { [Op.lte]: `${endYear}-${endMonth}-31 23:59:59` }
           ]
         }
       },
@@ -323,7 +322,7 @@ exports.totalPendapatanBulanan = async (request, response) => {
 //endpoint yang menghitung total pendapatan tahunan berdasarkan tahun yang diinputkan:
 exports.totalPendapatanTahunan = async (request, response) => {
   try {
-    const { year } = request.body;
+    const { startYear, endYear } = request.body;
 
     const totalPendapatan = await transaksiModel.findAll({
       attributes: [
@@ -331,7 +330,7 @@ exports.totalPendapatanTahunan = async (request, response) => {
       ],
       where: {
         tgl_transaksi: {
-          [Op.between]: [`${year}-01-01 00:00:00`, `${year}-12-31 23:59:59`]
+          [Op.between]: [`${startYear}-01-01 00:00:00`, `${endYear}-12-31 23:59:59`]
         }
       },
       include: [
@@ -355,6 +354,7 @@ exports.totalPendapatanTahunan = async (request, response) => {
     });
   }
 };
+
 
 // Endpoint untuk mendapatkan data statistik makanan dan minuman terlaris
 exports.statistik_makanan_minuman_terlaris = async (request, response) => {
