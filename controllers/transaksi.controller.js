@@ -193,7 +193,6 @@ exports.getTransaksi = async (request, response) => {
   }
 }
 
-
 exports.filterTransaksi = async (request, response) => {
   try {
     const keyword = request.body.keyword;
@@ -250,6 +249,7 @@ exports.totalPendapatanTanggal = async (request, response) => {
     const { startDate, endDate } = request.body;
 
     const totalPendapatan = await transaksiModel.findAll({
+      raw: true,
       attributes: [
         [fn('SUM', col('detail_transaksi.harga')), 'total_income']
       ],
@@ -286,6 +286,7 @@ exports.totalPendapatanBulanan = async (request, response) => {
     const { startMonth, endMonth, startYear, endYear } = request.body;
 
     const totalPendapatan = await transaksiModel.findAll({
+      raw: true,
       attributes: [
         [fn('SUM', col('detail_transaksi.harga')), 'total_income']
       ],
@@ -325,6 +326,7 @@ exports.totalPendapatanTahunan = async (request, response) => {
     const { startYear, endYear } = request.body;
 
     const totalPendapatan = await transaksiModel.findAll({
+      raw: true,
       attributes: [
         [fn('SUM', col('detail_transaksi.harga')), 'total_income']
       ],
