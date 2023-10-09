@@ -173,6 +173,7 @@ exports.deleteTransaksi = async (request, response) => {
 exports.getTransaksi = async (request, response) => {
   try {
     let result = await transaksiModel.findAll({
+      order:[["tgl_transaksi", "DESC"]],
       include: [
         "user", "meja", {
           model: detailTransaksiModel,
